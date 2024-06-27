@@ -1,0 +1,328 @@
+% ---- Modele TP PC V2 Déprécié -----------
+\documentclass[a4paper,10pt,french]{scrartcl}
+\usepackage[T1]{fontenc}%---pour l'encodage d'entr\'ee
+\usepackage{array}%---pour les tableaux
+\usepackage{titlesec}%---modification des titres
+\usepackage{ulem}%---pour le soulignage
+\usepackage{amssymb}
+\usepackage[dvipsnames]{xcolor}%---pour avoir d'autres couleurs
+\usepackage{color}%---pour avoir les couleurs de base
+\usepackage{babel}%---pour les trucs de langue et la francasation
+\usepackage{arev}%---police du document (texte + maths)
+\usepackage{graphicx}%----pour mettre des images
+\usepackage[utf8]{inputenc}%---encodage
+\usepackage{geometry}%---pour modifier les tailles et mettre a4paper
+%\usepackage{awesomebox}%---pour les boites d'exercices, de pbq et de croquis ---d\'esactiv\'e pour les TP de PC
+\usepackage{tikz}%---pour dessiner + d\'ependance de chemfig
+\usepackage{chemfig}%---pour dessiner formules chimiques
+\usepackage{chemformula}%---pour les formules chimiques en \'equation : \ch{...}
+\usepackage{tabularx}%---pour dimensionner automatiquement les tableaux avec variable X
+\usepackage{awesomebox}%---Pour les boites info, danger et autres
+\usepackage{fancyhdr}%---pour les en-t\^ete personnalis\'ees
+\usepackage{blindtext}%---pour les liens
+\usepackage{hyperref}%---pour les liens (\`a mettre en dernier)
+\usepackage{caption}%---pour la francisation de la l\'egende table vers Tableau
+\usepackage{pifont}
+\captionsetup{labelfont=sc}%---pour la francisation de la l\'egende table vers Tableau
+\def\frenchtablename{Tableau}%---pour la francisation de la l\'egende table vers Tableau
+\pagestyle{fancy}
+\renewcommand\headrulewidth{1pt}
+\fancyhead[L]{De quoi dépend la force ressentie lors d'une chute en escalade ?}
+\fancyhead[R]{blog.paulhenry.eu}
+\title{De quoi dépend la force ressentie lors d'une chute en escalade ?}
+\date{}
+\author{}
+
+\geometry{a4paper}
+% ----------- Création des commandes de couleur ----------
+\makeatletter
+\newcommand{\coloruline}[2]{%
+        \UL@protected\def\temp@uline{\leavevmode \bgroup
+            \markoverwith{\textcolor{#1}{\rule[-0.5ex]{2pt}{0.4pt}}}%
+        \ULon}%
+        \temp@uline{#2}%
+    }
+
+    \newcommand{\coloruuline}[2]{%
+        \UL@protected\def\temp@uuline{\leavevmode \bgroup
+            \UL@setULdepth
+            \ifx\UL@on\UL@onin \advance\ULdepth2.8\p@\fi
+            \markoverwith{\textcolor{#1}{\lower\ULdepth\hbox
+                {\kern-.03em\vbox{\hrule width.2em\kern1\p@\hrule}\kern-.03em}}}%
+        \ULon}%
+        \temp@uuline{#2}%
+    }
+
+    \newcommand{\coloruwave}[2]{%
+        \UL@protected\def\temp@uwave{\leavevmode \bgroup
+        \ifdim \ULdepth=\maxdimen \ULdepth 3.5\p@
+        \else \advance\ULdepth2\p@
+        \fi \markoverwith{\textcolor{#1}{\lower\ULdepth\hbox{\sixly \char58}}}\ULon}
+        \font\sixly=lasy6 % does not re-load if already loaded, so no memory drain.
+        \temp@uwave{#2}%
+    }
+\makeatother
+\newcommand{\Lim}[1]{\raisebox{0.5ex}{\scalebox{0.8}{$\displaystyle \lim_{#1}\;$}}}
+%----specifiques hist-geo----
+\newcommand{\cf}[1]{{\color{violet}(cf. #1)}}
+\newcommand{\schema}[2]{\awesomebox[NavyBlue]{3pt}{\faCheckCircle}{NavyBlue}{{\color{NavyBlue}Sch\'ema : }\begin{center}
+\includegraphics[scale=#2]{#1}
+\end{center}}}
+\newcommand{\pbq}[1]{\awesomebox[ForestGreen]{3pt}{\faQuestionCircle[regular]}{ForestGreen}{{\color{ForestGreen}\textit{#1}}}}
+\newcommand{\ex}[2]{\awesomebox[Red]{3pt}{\faPencil*}{Red}{{\color{Red}Exercice : #1}
+
+#2}}
+\newcommand{\correction}[2]{\awesomebox[ForestGreen]{3pt}{\faCheckCircle}{ForestGreen}{{\color{ForestGreen}Correction : #1}
+
+#2}}
+\renewcommand{\thesection}{\arabic{section}}
+\renewcommand{\thesubsection}{\arabic{subsection}}
+\renewcommand{\thesubsubsection}{\arabic{subsubsection}}
+%---fin specifiques hist-geo----
+\begin{document}
+% ---------------- Modification des titres de niveau 1,2 et 3 --------------------
+\titleformat
+{\section} % command
+%[display] % shape
+{\Large} % format
+{\coloruuline{red}{\thesection. }} % label
+{0ex} % sep
+{\coloruuline{red}} % before-code
+[] % after-code
+
+\titleformat
+{\subsection} % command
+%[display] % shape
+{\Large} % format
+{\coloruline{red}{\thesection.\thesubsection. }} % label
+{0ex} % sep
+{\coloruline{red}} % before-code
+[] % after-code
+
+\titleformat
+{\subsubsection} % command
+%[display] % shape
+{\large} % format
+{\coloruline{ForestGreen}{\thesection.\thesubsection.\thesubsubsection \:- }} % label
+{0ex} % sep
+{\coloruline{ForestGreen}} % before-code
+[] % after-code
+
+\titleformat
+{\chapter} % command
+%[display] % shape
+{\large} % format
+{\coloruline{NavyBlue}{\thechapter \:- }} % label
+{0ex} % sep
+{\coloruline{NavyBlue}} % before-code
+[] % after-code
+
+
+% ---------------- Début du corps du document ------------------------------------
+\maketitle
+\section{Pourquoi avoir choisi ce problème ?}
+\section{Quelque notions de base de l'escalade}
+L'assurage est une technique de réduction des conséquences de la chute d'une personne.
+
+Cela s'effectue par le contrôle de la corde de progression, de manière à ce que la personne engagée soit retenue si elle venait à chuter.
+
+Cette tâche est habituellement assignée à un assureur.
+
+Pour assurer un grimpeur, l'assureur utilise généralement la friction de la corde sur un objet qui va lui permettre de coulisser mais qui pourra être bloqué manuellement, voire automatiquement dans certains cas, lors de la chute.
+
+
+
+%Un whipper est une chute extrêmement dure lorsque la corde soutenant le grimpeur est soumise à un poids important.
+
+%Le terme whipper provient du mouvement de balancier que le grimpeur qui chute peut avoir si l'assureur effectue mal son travail.
+
+%Même s'il n'y a pas de mouvement de balancier, le terme whipper est utilisé pour des chutes dures.
+
+% \section{Les hypothèses}
+%
+% Soit une corde élastique de longueur L (avant l’étirement) entre un grimpeur et son assureur.
+%
+% Si la corde n'est pas élastique, le facteur de chute ne s'applique pas.
+%
+% Nous nous intéressons seulement à la chute du grimpeur et nous omettons la possibilité qu'il se heurte à des roches, etc.
+%
+% Nous omettons les forces de frottement que subit la corde en passant dans les mousquetons, etc.
+
+% \section{La loi de Hooke}
+%
+% La loi de Hooke est en fait le terme de premier ordre d'une série de Taylor. C'est donc une approximation qui peut devenir inexacte quand la déformation est trop grande. Au-delà d'un certain seuil, la déformation peut aussi devenir permanente, ce qui invalide aussi la loi. En revanche, la loi de Hooke peut être considérée à toutes fins pratiques comme exacte quand les forces et les déformations sont suffisamment petites, ce qui est le cas dans notre situation.
+%
+% La force qu’exerce la corde sur le grimpeur dépend de la longueur avec laquelle celle-ci s’est étirée par rapport à sa longueur initiale.
+%
+% Pour de petites déformations, la variation de longueur $l$ est proportionnelle à la force de traction/compression F générée par le ressort :
+%
+%
+% ce qui peut se réécrire : $F = -k \Delta l$
+% où k est la raideur de la pièce, aussi appelée constante de rappel. Ici, la constante de rappel est l'élasticité de la corde.
+
+\section{modélisation du problème + hypothèses}
+Lors d’une escalade, un grimpeur s’assure en passant sa
+corde dans des anneaux métalliques fixés au rocher.  Le facteur de chute f est défini comme le rapport de la hauteur de chute tant que la corde n’est pas tendue sur la longueur
+$L$ de corde utilisée. Si au moment de la chute, la corde est tendue, ce facteur de chute vaut
+$f= \frac{2l}{L}$ où $l$
+est la distance du grimpeur au dernier anneau. Dans des
+conditions normales d’utilisation $f$ est compris entre 0
+et 2.
+ Les cordes utilisées en escalade sont élastiques de
+façon à diminuer la force qui s’exerce sur le grimpeur lors
+de sa chute. On assimilera une corde de montagne dont la
+longueur utilisée est $L$ à un ressort de longueur à vide $L$ et de raideur $k = \frac{1}{\alpha L}$ L’élasticité $\alpha$ de la corde est une grandeur caractéristique du matériau la constituant.
+
+Dans notre analyse, nous nous intéressons seulement à la chute du grimpeur et nous omettons la possibilité qu'il se heurte à des roches, etc.
+
+Nous omettons également les forces de frottement que subit la corde en passant dans les mousquetons, etc.
+
+\section{Trouver de quoi dépend la chute}
+\subsection{modélisation d'un ressort}
+On note x l'alongement du ressort et on cherche pour le moment l'allongement maximal du ressort.
+
+
+Par le PFD, on a :
+\begin{flalign*}
+m\vec{a} &= \sum \vec{F}\\
+m\ddot{x} &= mg -kx \text{ en projetant sur i}\\
+\end{flalign*}
+
+On intègre une première fois :
+\begin{flalign*}
+\frac{1}{2}m\dot{x}^2 &= mgx -\frac{1}{2}kx^2 + k_1\\
+\end{flalign*}
+Quand $x=0$, la vitesse vaut $V_0$, donc :
+\begin{flalign*}
+\frac{1}{2}m\dot{x}^2 &= mg\times 0 -\frac{1}{2}k\times 0^2 + k_1\\
+\frac{1}{2}m\dot{x}^2 &= k_1\\
+\frac{1}{2}mv_0^2 &= k_1\\
+\end{flalign*}
+
+On obtient :
+
+\begin{flalign*}
+\frac{1}{2}m\dot{x}^2 &= mgx -\frac{1}{2}kx^2 + \frac{1}{2}mv_0^2\\
+\frac{1}{2}m\dot{x}^2 - mgx +\frac{1}{2}kx^2 &=\frac{1}{2}mv_0^2\\
+m\dot{x}^2 - 2mgx +kx^2 &=mv_0^2\\
+\end{flalign*}
+
+Quand l'élongation maximale est atteinte, la vitesse est nulle, donc $\dot{x} = 0$. On obtient l'équation du second degré $-2mgx+kx^2-mv_0^2 = 0$, dont on va chercher la solution positive.
+
+\begin{flalign*}
+\Delta &= b^2-4ac\\
+&= (-2mg)^2 - 4 \times k \times (-mv_0^2)\\
+&= 4m^2g^2+4kmv_0^2\\
+\end{flalign*}
+
+Alors :
+
+\begin{flalign*}
+S &= \frac{-b + \sqrt{\Delta}}{2a}\\
+&= \frac{2mg + \sqrt{(-2mg)^2+4kmv_0^2}}{2k}\\
+\end{flalign*}
+
+On transforme l'expression de la racine du Delta :
+
+\begin{flalign*}
+\sqrt{(-2mg)^2+4kmv_0^2}\\
+\sqrt{4m^2g^2+4kmv_0^2}\\
+\sqrt{4m^2g^2(1+ \frac{4kmv_0^2}{4m^2g^2})}\\
+\sqrt{4m^2g^2(1+ \frac{kv_0^2}{mg^2})}\\
+\sqrt{4m^2g^2(1+ \frac{k}{m} \frac{v_0^2}{g^2})}\\
+\sqrt{4m^2g^2(1+ \frac{k}{m} (\frac{v_0}{g})^2)}\\
+2mg\sqrt{1+ \frac{k}{m} (\frac{v_0}{g})^2}\\
+\end{flalign*}
+
+On la met dans l'expression de la solution S :
+\begin{flalign*}
+S &= \frac{2mg + 2mg\sqrt{1+ \frac{k}{m} (\frac{v_0}{g})^2}}{2k}\\
+&= \frac{2mg(1+ \sqrt{1+ \frac{k}{m} (\frac{v_0}{g})^2})}{2k}\\
+&= \frac{mg(1+ \sqrt{1+ \frac{k}{m} (\frac{v_0}{g})^2})}{k}\\
+&= \frac{mg}{k}(1+ \sqrt{1+ \frac{k}{m} (\frac{v_0}{g})^2})\\
+\end{flalign*}
+La force maximale de rappel du ressort vaut $F = kx_{max}$, soit
+\begin{flalign*}
+F &= \frac{kmg}{k}(1+ \sqrt{1+ \frac{k}{m} (\frac{v_0}{g})^2})\\
+&= mg(1+ \sqrt{1+ \frac{k}{m} (\frac{v_0}{g})^2})\\
+\end{flalign*}
+
+
+\subsection{Application à la corde}
+\subsubsection{Calcul de la hauteur h}
+Analysons l'aspect mécanique du problème pour trouver la hauteur de chute libre h qui donne une vitesse $v_0$ à la limite de tension de la corde, et ainsi exprimer $h$ en fonction de $v_0$ quand elle est complètement tendue).
+
+\begin{flalign*}
+\Delta E_m &= \Delta E_c + \Delta Epp = 0\\
+&= \frac{1}{2}mv_B^2 - \frac{1}{2}mv_A^2 + mgz_B -mgz_A\\
+&= \frac{1}{2}mv_0^2 - \frac{1}{2}mv_A^2 + mgz_B -mgh\\
+&= \frac{1}{2}mv_0^2 - mgh\\
+mgh &= \frac{1}{2}mv_0^2\\
+gh &= \frac{1}{2}v_0^2\\
+h &= \frac{v_0^2}{2g}\\
+\end{flalign*}
+La hauteur de chute libre $h$ qui donne une vitesse $v_0$ à la limite de tension de la corde est $h = \frac{v_0^2}{2g}$.
+\subsubsection{Calcul du facteur de chute}
+Par définition, $f=\frac{h}{L}$. Or, on a trouvé $l = h = \frac{v_0^2}{2g}$.
+Le facteur de chute du cas étudié est donc $f = \frac{v_0^2}{2gL}$.
+
+\subsubsection{Réécriture de la force maximale}
+Par définition, $\displaystyle k = \frac{1}{\alpha L}$, donc
+\begin{flalign*}
+F &= mg(1+ \sqrt{1+ (\frac{kv_0^2}{mg^2})})\\
+&= mg(1+ \sqrt{1+ (\frac{v_0^2}{mg^2\alpha L})})\\
+\end{flalign*}
+
+De plus, $v_0^2 = 2gLf$, donc
+
+\begin{flalign*}
+F &= mg(1+ \sqrt{1+ (\frac{v_0^2}{mg^2\alpha L})})\\
+&= mg(1+ \sqrt{1+ (\frac{2gLf}{mg^2\alpha L})})\\
+&= mg(1+ \sqrt{1+ (\frac{2f}{mg\alpha})})\\
+&= P(1+ \sqrt{1+ (\frac{2f}{P\alpha})})\\
+\end{flalign*}
+
+Ce résultat ne dépend que du facteur de chute, pas de h : pour une corde deux fois plus longue et une hauteur de chute deux fois plus grande, la force maximale est inchangée (le contact
+avec la paroi risque tout de même d’être un peu plus sévère !). Le cas le plus défavorable correspond à L minimum, pour une hauteur de chute h donnée, soit f = 2.
+\section{Conséquences sur la force ressentie}
+\subsection{facteur de chute}
+Nous avons démontré quelque chose, qui de prime abord, semble contre-intuitif. La force maximale ressentie par le grimpeur ne dépend pas de la hauteur de la chute mais bien du facteur de chute. Cela signifie que pour une corde deux fois plus longue et une hauteur de chute deux
+fois plus grande, la force maximale est inchangée (le contact
+avec la paroi risque tout de même d’être un peu plus sévère !).
+\subsection{élasticité de la corde}
+Lorsqu'on chute avec une corde, ses fibres s'usent. Elle devient moins amortissante, et peut dans l'extr\^eme limite se rompre sur une chute. Cependant il est plus probable que lors d'une chute la corde puisse blesser parce qu'elle n'amortis plus bien.
+
+L'\^age d'une corde est comptée en nombre de chutes de facteur 2 qu'elle a subie. Les cordes d'escalade sont conçue pour résister à au moins 5 chutes. Une bonne corde peut résister à 8 chutes.
+Il est une bonne pratique de marquer sur la corde le nombre de chutes qu'elle a subie afin de connaitre son élasticité (si elle est vieille elle sera d'autant moins souple), par exemple en dessinant des traits sur les bouts pour chaque chute importante. Il faut éviter de monter en tête avec une vieille corde.
+\section{Application diverses}
+\section{Conséquence sur les tests}
+Les tests du matériel d'escalade sont effectués par l'UIAA (Union Internationale des Associations d'Alpinisme). L'un des tests importants qu'une corde d'escalade doit passer pour être certifiée par l'UIAA est le test de chute.
+
+Une corde d'environ 2,5 m de long est fixée à un ancrage à une extrémité. Une masse de 80 kg (représentant un grimpeur "typique") est attachée à l'autre extrémité de la corde. La masse est ensuite soulevée verticalement à 2,5 m au-dessus du point d'ancrage et relâchée. La masse tombe alors d'un peu plus de 5,0 m (un peu plus en raison de l'étirement de la corde).
+Une exigence importante est que la force maximale exercée sur la masse par la corde pour arrêter la chute ne dépasse pas 12 kN. En effet, le corps humain ne peut pas supporter un impact supérieur à 12 kN sans subir de graves blessures.
+
+Lorsque les grimpeurs prennent connaissance de ce test, leur première réaction est souvent la suivante : "Ce test ne porte que sur une chute de 5 mètres. Que se passe-t-il si je fais une chute plus longue ?" Mais le fait est que la chute utilisée dans le test a un facteur de chute de 2. Il s'agit de la chute la plus grave qui puisse se produire dans le cadre d'une escalade en cordée normale. Puisque la force maximale exercée sur la masse ne dépend que du facteur de chute et non de la distance réelle de chute, si une corde réussit le test de chute, elle n'exercera pas plus de 12 kN pour arrêter une chute, quelle qu'en soit la longueur, tant que la masse du grimpeur ne dépasse pas les 80 kg utilisés dans le test.
+
+% (Dans la pratique, les fabricants de cordes prévoient une marge de sécurité considérable pour accommoder les grimpeurs plus lourds). Par conséquent, le résultat que nous avons établi concernant la force d'impact maximale justifie la norme du test de chute de l'UIAA Drop Test standard
+
+\subsection{Pourquoi 80 kg?}
+
+La force maximale ressentie ne doit pas dépasser 12 kN.
+
+Le corps humain ne peut pas être soumis à un impact supérieur à 15 fois l'accélération gravitationnelle, sans en ressentir de graves séquelles.
+
+Par la seconde loi de Newton:
+
+\[
+\begin{aligned}
+F &= ma \\
+12\ 000 &= m\cdot (15g) \\
+m &= \frac{12\ 000}{15g} \\
+&= 80\ kg \quad (\text{en prenant } g=10 \ m\cdot s^{-2})
+\end{aligned}
+\]
+
+% http://www.mmelzani.fr/index.php?page=8&spage=6
+
+% https://www.petzl.com/CA/fr/Sport/Force-de-choc-et-facteur-de-chute---theorie
+\end{document}

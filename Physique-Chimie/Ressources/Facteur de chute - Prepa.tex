@@ -1,0 +1,308 @@
+% ---- Modele TP PC V2 -----------
+\documentclass[a4paper,10pt,french]{scrartcl}
+\usepackage[T1]{fontenc}%---pour l'encodage d'entr\'ee
+\usepackage{array}%---pour les tableaux
+\usepackage{titlesec}%---modification des titres
+\usepackage{ulem}%---pour le soulignage
+\usepackage{amssymb}
+\usepackage[dvipsnames]{xcolor}%---pour avoir d'autres couleurs
+\usepackage{color}%---pour avoir les couleurs de base
+\usepackage{babel}%---pour les trucs de langue et la francasation
+\usepackage{arev}%---police du document (texte + maths)
+\usepackage{graphicx}%----pour mettre des images
+\usepackage[utf8]{inputenc}%---encodage
+\usepackage{geometry}%---pour modifier les tailles et mettre a4paper
+%\usepackage{awesomebox}%---pour les boites d'exercices, de pbq et de croquis ---d\'esactiv\'e pour les TP de PC
+\usepackage{tikz}%---pour dessiner + d\'ependance de chemfig
+\usepackage{chemfig}%---pour dessiner formules chimiques
+\usepackage{chemformula}%---pour les formules chimiques en \'equation : \ch{...}
+\usepackage{tabularx}%---pour dimensionner automatiquement les tableaux avec variable X
+\usepackage{awesomebox}%---Pour les boites info, danger et autres
+\usepackage{fancyhdr}%---pour les en-t\^ete personnalis\'ees
+\usepackage{blindtext}%---pour les liens
+\usepackage{hyperref}%---pour les liens (\`a mettre en dernier)
+\usepackage{caption}%---pour la francisation de la l\'egende table vers Tableau
+\usepackage{pifont}
+\captionsetup{labelfont=sc}%---pour la francisation de la l\'egende table vers Tableau
+\def\frenchtablename{Tableau}%---pour la francisation de la l\'egende table vers Tableau
+\pagestyle{fancy}
+\renewcommand\headrulewidth{1pt}
+\fancyhead[L]{Le Concept de facteur de chute en escalade}
+\fancyhead[R]{blog.paulhenry.eu}
+\title{Le Concept de facteur de chute en escalade}
+\date{}
+\author{}
+
+\geometry{a4paper}
+% ----------- Création des commandes de couleur ----------
+\makeatletter
+\newcommand{\coloruline}[2]{%
+        \UL@protected\def\temp@uline{\leavevmode \bgroup
+            \markoverwith{\textcolor{#1}{\rule[-0.5ex]{2pt}{0.4pt}}}%
+        \ULon}%
+        \temp@uline{#2}%
+    }
+
+    \newcommand{\coloruuline}[2]{%
+        \UL@protected\def\temp@uuline{\leavevmode \bgroup
+            \UL@setULdepth
+            \ifx\UL@on\UL@onin \advance\ULdepth2.8\p@\fi
+            \markoverwith{\textcolor{#1}{\lower\ULdepth\hbox
+                {\kern-.03em\vbox{\hrule width.2em\kern1\p@\hrule}\kern-.03em}}}%
+        \ULon}%
+        \temp@uuline{#2}%
+    }
+
+    \newcommand{\coloruwave}[2]{%
+        \UL@protected\def\temp@uwave{\leavevmode \bgroup
+        \ifdim \ULdepth=\maxdimen \ULdepth 3.5\p@
+        \else \advance\ULdepth2\p@
+        \fi \markoverwith{\textcolor{#1}{\lower\ULdepth\hbox{\sixly \char58}}}\ULon}
+        \font\sixly=lasy6 % does not re-load if already loaded, so no memory drain.
+        \temp@uwave{#2}%
+    }
+\makeatother
+\newcommand{\Lim}[1]{\raisebox{0.5ex}{\scalebox{0.8}{$\displaystyle \lim_{#1}\;$}}}
+%----specifiques hist-geo----
+\newcommand{\cf}[1]{{\color{violet}(cf. #1)}}
+\newcommand{\schema}[2]{\awesomebox[NavyBlue]{3pt}{\faCheckCircle}{NavyBlue}{{\color{NavyBlue}Sch\'ema : }\begin{center}
+\includegraphics[scale=#2]{#1}
+\end{center}}}
+\newcommand{\pbq}[1]{\awesomebox[ForestGreen]{3pt}{\faQuestionCircle[regular]}{ForestGreen}{{\color{ForestGreen}\textit{#1}}}}
+\newcommand{\ex}[2]{\awesomebox[Red]{3pt}{\faPencil*}{Red}{{\color{Red}Exercice : #1}
+
+#2}}
+\newcommand{\correction}[2]{\awesomebox[ForestGreen]{3pt}{\faCheckCircle}{ForestGreen}{{\color{ForestGreen}Correction : #1}
+
+#2}}
+\renewcommand{\thesection}{\arabic{section}}
+\renewcommand{\thesubsection}{\arabic{subsection}}
+\renewcommand{\thesubsubsection}{\arabic{subsubsection}}
+%---fin specifiques hist-geo----
+\begin{document}
+% ---------------- Modification des titres de niveau 1,2 et 3 --------------------
+\titleformat
+{\section} % command
+%[display] % shape
+{\Large} % format
+{\coloruuline{red}{\thesection. }} % label
+{0ex} % sep
+{\coloruuline{red}} % before-code
+[] % after-code
+
+\titleformat
+{\subsection} % command
+%[display] % shape
+{\Large} % format
+{\coloruline{red}{\thesection.\thesubsection. }} % label
+{0ex} % sep
+{\coloruline{red}} % before-code
+[] % after-code
+
+\titleformat
+{\subsubsection} % command
+%[display] % shape
+{\large} % format
+{\coloruline{ForestGreen}{\thesection.\thesubsection.\thesubsubsection \:- }} % label
+{0ex} % sep
+{\coloruline{ForestGreen}} % before-code
+[] % after-code
+
+\titleformat
+{\chapter} % command
+%[display] % shape
+{\large} % format
+{\coloruline{NavyBlue}{\thechapter \:- }} % label
+{0ex} % sep
+{\coloruline{NavyBlue}} % before-code
+[] % after-code
+
+
+% ---------------- Début du corps du document ------------------------------------
+\maketitle
+\section{}
+On note x l'alongement du ressort
+Par le PFD, on a :
+\begin{flalign*}
+m\vec{a} &= \sum \vec{F}\\
+m\ddot{x} &= mg -kx \text{en projetant sur i}\\
+\end{flalign*}
+
+On intègre une première fois :
+\begin{flalign*}
+\frac{1}{2}m\dot{x}^2 &= mgx -\frac{1}{2}kx^2 + k_1\\
+\end{flalign*}
+Quand $x=0$, la vitesse vaut $V_0$, donc :
+\begin{flalign*}
+\frac{1}{2}m\dot{x}^2 &= mg\times 0 -\frac{1}{2}k\times 0^2 + k_1\\
+\frac{1}{2}m\dot{x}^2 &= k_1\\
+\frac{1}{2}mv_0^2 &= k_1\\
+\end{flalign*}
+
+On obtient :
+
+\begin{flalign*}
+\frac{1}{2}m\dot{x}^2 &= mgx -\frac{1}{2}kx^2 + \frac{1}{2}mv_0^2\\
+\frac{1}{2}m\dot{x}^2 - mgx +\frac{1}{2}kx^2 &=\frac{1}{2}mv_0^2\\
+m\dot{x}^2 - 2mgx +kx^2 &=mv_0^2\\
+\end{flalign*}
+
+Quand l'élongation maximale est atteinte, la vitesse est nulle, donc $\dot{x} = 0$. On obtient l'équation du second degré $-2mgx+kx^2-mv_0^2 = 0$, dont on va chercher la solution positive.
+
+\begin{flalign*}
+\Delta &= b^2-4ac\\
+&= (-2mg)^2 - 4 \times k \times (-mv_0^2)\\
+&= 4m^2g^2+4kmv_0^2\\
+\end{flalign*}
+
+Alors :
+
+\begin{flalign*}
+S &= \frac{-b + \sqrt{\Delta}}{2a}\\
+&= \frac{2mg + \sqrt{(-2mg)^2+4kmv_0^2}}{2k}\\
+\end{flalign*}
+
+On transforme l'expression de la racine du Delta :
+
+\begin{flalign*}
+\sqrt{(-2mg)^2+4kmv_0^2}\\
+\sqrt{4m^2g^2+4kmv_0^2}\\
+\sqrt{4m^2g^2(1+ \frac{4kmv_0^2}{4m^2g^2})}\\
+\sqrt{4m^2g^2(1+ \frac{kv_0^2}{mg^2})}\\
+\sqrt{4m^2g^2(1+ \frac{k}{m} \frac{v_0^2}{g^2})}\\
+\sqrt{4m^2g^2(1+ \frac{k}{m} (\frac{v_0}{g})^2)}\\
+2mg\sqrt{1+ \frac{k}{m} (\frac{v_0}{g})^2}\\
+\end{flalign*}
+
+On la met dans l'expression de base :
+\begin{flalign*}
+S &= \frac{2mg + 2mg\sqrt{1+ \frac{k}{m} (\frac{v_0}{g})^2}}{2k}\\
+&= \frac{2mg(1+ \sqrt{1+ \frac{k}{m} (\frac{v_0}{g})^2})}{2k}\\
+&= \frac{mg(1+ \sqrt{1+ \frac{k}{m} (\frac{v_0}{g})^2})}{k}\\
+&= \frac{mg}{k}(1+ \sqrt{1+ \frac{k}{m} (\frac{v_0}{g})^2})\\
+\end{flalign*}
+La force maximale de rappel du ressort vaut $F = kx_{max}$, soit
+\begin{flalign*}
+F &= \frac{kmg}{k}(1+ \sqrt{1+ \frac{k}{m} (\frac{v_0}{g})^2})\\
+&= mg(1+ \sqrt{1+ \frac{k}{m} (\frac{v_0}{g})^2})\\
+\end{flalign*}
+
+
+\section{}
+\subsection{Calcul de la hauteur h}
+Analysons l'aspect mécanique du problème pour trouver la hauteur de chute libre h qui donne une vitesse $v_0$ à la limite de tension de la corde.
+
+\begin{flalign*}
+\Delta E_m &= \Delta E_c + \Delta Epp = 0\\
+&= \frac{1}{2}mv_B^2 - \frac{1}{2}mv_A^2 + mgz_B -mgz_A\\
+&= \frac{1}{2}mv_0^2 - \frac{1}{2}mv_A^2 + mgz_B -mgh\\
+&= \frac{1}{2}mv_0^2 - mgh\\
+mgh &= \frac{1}{2}mv_0^2\\
+gh &= \frac{1}{2}v_0^2\\
+h &= \frac{v_0^2}{2g}\\
+\end{flalign*}
+La hauteur de chute libre $h$ qui donne une vitesse $v_0$ à la limite de tension de la corde est $h = \frac{v_0^2}{2g}$.
+\subsection{Calcul du facteur de chute}
+Par définition, $f=\frac{h}{L}$. Or, on a trouvé $l = h = \frac{v_0^2}{2g}$.
+Le facteur de chute du cas étudié est donc $f = \frac{v_0^2}{2gL}$.
+
+\subsection{Réécriture de la force maximale}
+Par définition, $\displaystyle k = \frac{1}{\alpha L}$, donc
+\begin{flalign*}
+F &= mg(1+ \sqrt{1+ (\frac{kv_0^2}{mg^2})})\\
+&= mg(1+ \sqrt{1+ (\frac{v_0^2}{mg^2\alpha L})})\\
+\end{flalign*}
+
+De plus, $v_0^2 = 2gLf$, donc
+
+\begin{flalign*}
+F &= mg(1+ \sqrt{1+ (\frac{v_0^2}{mg^2\alpha L})})\\
+&= mg(1+ \sqrt{1+ (\frac{2gLf}{mg^2\alpha L})})\\
+&= mg(1+ \sqrt{1+ (\frac{2f}{mg\alpha})})\\
+&= P(1+ \sqrt{1+ (\frac{2f}{P\alpha})})\\
+\end{flalign*}
+
+Ce résultat ne dépend que du facteur de chute, pas de h : pour une corde deux fois plus longue et une hauteur de chute deux fois plus grande, la force maximale est inchangée (le contact
+avec la paroi risque tout de même d’être un peu plus sévère !). Le cas le plus défavorable correspond à L minimum, pour une hauteur de chute h donnée, soit f = 2, cas du doc. 2 de l’énoncé.
+
+\section{}
+\subsection{}
+\subsubsection{}
+\begin{flalign*}
+F &= P(1+ \sqrt{1+ (\frac{2f}{P\alpha})})\\
+\frac{F}{P} &= 1+ \sqrt{1+ (\frac{2f}{P\alpha})}\\
+\frac{F}{P} &= \frac{P}{P} + \sqrt{1+ (\frac{2f}{P\alpha})}\\
+\frac{F-P}{P} &= \sqrt{1+ (\frac{2f}{P\alpha})}\\
+(\frac{F-P}{P})^2 &= 1+ (\frac{2f}{P\alpha})\\
+\frac{F^2-2FP+P^2}{P^2} &= 1+ (\frac{2f}{P\alpha})\\
+\frac{F^2-2FP+P^2}{P^2}-1 &= \frac{2f}{P\alpha}\\
+\frac{F^2-2FP+P^2}{P^2}-\frac{P^2}{P^2} &= \frac{2f}{P\alpha}\\
+\frac{F^2-2FP}{P^2} &= \frac{2f}{P\alpha}\\
+\iff \frac{2fP^2}{F^2-2FP} &= P\alpha\\
+\frac{2fP}{F^2-2FP} &= \alpha\\
+\frac{2fP}{F(F-2P)} &= \alpha\\
+\end{flalign*}
+L'élasticité de ma corde est :
+\[\alpha = \frac{2fP}{F_{max}(F_{max} - 2P)}\]
+
+Elle est mesurée en $N^{-1}$.
+
+Pour $F_{max} = 9\texttt{kN}, P = 800 \texttt{N}, f=2$, il faut que l'élasticité de la corde soit $\alpha = 4.8\cdot 10^{-5}N^{-1}$.
+\subsubsection{}
+Par définition, $F =kx$. Donc :
+\begin{flalign*}
+F &= kx\\
+\iff x &= \frac{F}{k}\\
+&= \frac{mg}{k}(1+\sqrt{1+\frac{2f}{\alpha p}})\\
+&= \frac{mg}{\frac{1}{\alpha L}}(\dots)\\
+&= mg\alpha L(\dots)\\
+&= P\alpha L(\dots)\\
+&= P\alpha L(1+\sqrt{1+\frac{2f}{\alpha p}})
+\end{flalign*}
+Pour $L = 10$m et $f = 1$, l'élongation maximale est :
+\[x_{max} = \alpha LP(1+\sqrt{1+\frac{2f}{\alpha P}}) = 3.2m\]
+
+et la force maximale vaut $6.6$kn.
+\subsubsection{}
+Ce cas apparaît catastrophique : la hauteur de chute est importante alors que la partie extensible de la corde est très réduite.
+C’est pourtant ce qui est utilisé dans le cas d’une excursion en via ferrata, mais le dispositif d’assurance utilisé est alors tout particulièrement conçu pour ce genre d’expédition :
+la fixation au harnais est un amortisseur.
+
+A.N. : $f = 5, L = 1m et F_{max} = 13,7$ kN.
+
+\section{Cons\'equence sur les tests}
+Les tests du mat\'eriel d'escalade sont effectu\'es par l'UIAA (Union Internationale des Associations d'Alpinisme). L'un des tests importants qu'une corde d'escalade doit passer pour \^etre certifi\'ee par l'UIAA est le test de chute. pour \^etre certifi\'ee par l'UIAA est le test de chute.
+
+Une corde d'environ 2,5 m de long est fix\'ee \`a un ancrage \`a une extr\'emit\'e. Une masse de 80 kg (repr\'esentant un grimpeur "typique") est attach\'ee \`a l'autre extr\'emit\'e de la corde. La masse est ensuite soulev\'ee verticalement \`a 2,5 m au-dessus du point d'ancrage et relach\'ee. La masse tombe alors d'un peu plus de 5,0 m (un peu plus en raison de l'\'etirement de la corde).
+Une exigence importante est que la force maximale exerc\'ee sur la masse par la corde pour arr\^eter la chute ne d\'epasse pas 12 kN. En effet, le corps humain ne peut pas supporter un impact sup\'erieur \`a 12 kN sans subir de graves blessures.
+
+Lorsque les grimpeurs prennent connaissance de ce test, leur premi\`ere r\'eaction est souvent la suivante : "Ce test ne porte que sur une chute de 5 m\`etres. Que se passe-t-il si je fais une chute plus longue ?" Mais le fait est que la chute utilis\'ee dans le test a un facteur de chute de 2. Il s'agit de la chute la plus grave qui puisse se produire dans le cadre d'une escalade en cord\'ee normale. Puisque la force maximale exerc\'ee sur la masse ne d\'epend que du facteur de chute et non de la distance r\'eelle de chute, si une corde r\'eussit le test de chute, elle n'exercera pas plus de 12 kN pour arr\^eter une chute, quelle qu'en soit la longueur, tant que la masse du grimpeur ne d\'epasse pas les 80 kg utilis\'es dans le test.
+
+(Dans la pratique, les fabricants de cordes pr\'evoient une marge de s\'ecurit\'e consid\'erable pour accommoder les grimpeurs plus lourds). Par cons\'equent, le r\'esultat que nous avons \'etabli concernant la force d'impact maximale justifie la norme du test de chute de l'UIAA Drop Test standard
+
+\subsection{Pourquoi 80 kg?}
+
+La force maximale ressentie ne doit pas d\'epasser 12 kN.
+
+Le corps humain ne peut pas \^etre soumis \`a un impact sup\'erieur \`a 15 fois l'acc\'el\'eration gravitationnelle, sans en ressentir de graves s\'equelles.
+
+Par la seconde loi de Newton:
+
+\[
+\begin{aligned}
+F &= ma \\
+12\ 000 &= m\cdot (15g) \\
+m &= \frac{12\ 000}{15g} \\
+&= 80\ kg \quad (\text{en prenant } g=10 \ m\cdot s^{-2})
+\end{aligned}
+\]
+
+% http://www.mmelzani.fr/index.php?page=8&spage=6
+
+% https://www.petzl.com/CA/fr/Sport/Force-de-choc-et-facteur-de-chute---theorie?ActivityName=Escalade
+
+%http://e2phy.in2p3.fr/2008/documents/presentations/Atelier_Cordes_d_escalade.pdf
+%Penser \`a faire le sch\'ema
+%Sch\'ema avec l'image de du livre de Prepa + Equations avec d\'ebuts et fin
+%Pour le cas avec la raideur maximale, dire au maximuum
+\end{document}

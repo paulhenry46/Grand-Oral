@@ -1,0 +1,300 @@
+% ---- Modele TP PC V2 -----------
+\documentclass[a4paper,10pt,french]{scrartcl}
+\usepackage[T1]{fontenc}%---pour l'encodage d'entr\'ee
+\usepackage{array}%---pour les tableaux
+\usepackage{titlesec}%---modification des titres
+\usepackage{ulem}%---pour le soulignage
+\usepackage{amssymb}
+\usepackage[dvipsnames]{xcolor}%---pour avoir d'autres couleurs
+\usepackage{color}%---pour avoir les couleurs de base
+\usepackage{babel}%---pour les trucs de langue et la francasation
+\usepackage{arev}%---police du document (texte + maths)
+\usepackage{graphicx}%----pour mettre des images
+\usepackage[utf8]{inputenc}%---encodage
+\usepackage{geometry}%---pour modifier les tailles et mettre a4paper
+%\usepackage{awesomebox}%---pour les boites d'exercices, de pbq et de croquis ---d\'esactiv\'e pour les TP de PC
+\usepackage{tikz}%---pour dessiner + d\'ependance de chemfig
+\usepackage{chemfig}%---pour dessiner formules chimiques
+\usepackage{chemformula}%---pour les formules chimiques en \'equation : \ch{...}
+\usepackage{tabularx}%---pour dimensionner automatiquement les tableaux avec variable X
+\usepackage{awesomebox}%---Pour les boites info, danger et autres
+\usepackage{fancyhdr}%---pour les en-t\^ete personnalis\'ees
+\usepackage{blindtext}%---pour les liens
+\usepackage{hyperref}%---pour les liens (\`a mettre en dernier)
+\usepackage{caption}%---pour la francisation de la l\'egende table vers Tableau
+\usepackage{pifont}
+\captionsetup{labelfont=sc}%---pour la francisation de la l\'egende table vers Tableau
+\def\frenchtablename{Tableau}%---pour la francisation de la l\'egende table vers Tableau
+\pagestyle{fancy}
+\renewcommand\headrulewidth{1pt}
+\fancyhead[L]{Décroissance radioactive}
+\fancyhead[R]{Grand Oral de Mathématiques}
+\title{Qu'est ce que la décroissance radioactive et comment l'utiliser ?}
+\date{}
+\author{}
+
+\geometry{a4paper}
+% ----------- Création des commandes de couleur ----------
+\makeatletter
+\newcommand{\coloruline}[2]{%
+        \UL@protected\def\temp@uline{\leavevmode \bgroup
+            \markoverwith{\textcolor{#1}{\rule[-0.5ex]{2pt}{0.4pt}}}%
+        \ULon}%
+        \temp@uline{#2}%
+    }
+
+    \newcommand{\coloruuline}[2]{%
+        \UL@protected\def\temp@uuline{\leavevmode \bgroup
+            \UL@setULdepth
+            \ifx\UL@on\UL@onin \advance\ULdepth2.8\p@\fi
+            \markoverwith{\textcolor{#1}{\lower\ULdepth\hbox
+                {\kern-.03em\vbox{\hrule width.2em\kern1\p@\hrule}\kern-.03em}}}%
+        \ULon}%
+        \temp@uuline{#2}%
+    }
+
+    \newcommand{\coloruwave}[2]{%
+        \UL@protected\def\temp@uwave{\leavevmode \bgroup
+        \ifdim \ULdepth=\maxdimen \ULdepth 3.5\p@
+        \else \advance\ULdepth2\p@
+        \fi \markoverwith{\textcolor{#1}{\lower\ULdepth\hbox{\sixly \char58}}}\ULon}
+        \font\sixly=lasy6 % does not re-load if already loaded, so no memory drain.
+        \temp@uwave{#2}%
+    }
+\makeatother
+\newcommand{\Lim}[1]{\raisebox{0.5ex}{\scalebox{0.8}{$\displaystyle \lim_{#1}\;$}}}
+%----specifiques hist-geo----
+\newcommand{\cf}[1]{{\color{violet}(cf. #1)}}
+\newcommand{\schema}[2]{\awesomebox[NavyBlue]{3pt}{\faCheckCircle}{NavyBlue}{{\color{NavyBlue}Sch\'ema : }\begin{center}
+\includegraphics[scale=#2]{#1}
+\end{center}}}
+\newcommand{\pbq}[1]{\awesomebox[ForestGreen]{3pt}{\faQuestionCircle[regular]}{ForestGreen}{{\color{ForestGreen}\textit{#1}}}}
+\newcommand{\ex}[2]{\awesomebox[Red]{3pt}{\faPencil*}{Red}{{\color{Red}Exercice : #1}
+
+#2}}
+\newcommand{\correction}[2]{\awesomebox[ForestGreen]{3pt}{\faCheckCircle}{ForestGreen}{{\color{ForestGreen}Correction : #1}
+
+#2}}
+\renewcommand{\thesection}{\arabic{section}}
+\renewcommand{\thesubsection}{\arabic{subsection}}
+\renewcommand{\thesubsubsection}{\arabic{subsubsection}}
+%---fin specifiques hist-geo----
+\begin{document}
+% ---------------- Modification des titres de niveau 1,2 et 3 --------------------
+\titleformat
+{\section} % command
+%[display] % shape
+{\Large} % format
+{\coloruuline{red}{\thesection. }} % label
+{0ex} % sep
+{\coloruuline{red}} % before-code
+[] % after-code
+
+\titleformat
+{\subsection} % command
+%[display] % shape
+{\Large} % format
+{\coloruline{red}{\thesection.\thesubsection. }} % label
+{0ex} % sep
+{\coloruline{red}} % before-code
+[] % after-code
+
+\titleformat
+{\subsubsection} % command
+%[display] % shape
+{\large} % format
+{\coloruline{ForestGreen}{\thesection.\thesubsection.\thesubsubsection \:- }} % label
+{0ex} % sep
+{\coloruline{ForestGreen}} % before-code
+[] % after-code
+
+\titleformat
+{\chapter} % command
+%[display] % shape
+{\large} % format
+{\coloruline{NavyBlue}{\thechapter \:- }} % label
+{0ex} % sep
+{\coloruline{NavyBlue}} % before-code
+[] % after-code
+
+
+% ---------------- Début du corps du document ------------------------------------
+\maketitle
+\section{Introduction}
+%TODO Conclusion
+Nous avons la chance de vivre tout proche de la vallée de l'Homme. Depuis ma plus tendre enfance mes parent m'amènent visiter de nombreux sites archéologiques. A ces occasions, j'ai très souvent entendu parler de la datation au carbone 14. À l'époque le concept sous-jacent à ce mode de datation me paraissait bien abstrait. Aujourd'hui grâce aux connaissances de l'EDS mathématiques et après quelques recherches, je me suis rendu compte que la loi de décroissance radioactive jouait un r\^ole central de la datation au carbone 14. Cependant, la présence de l'exponentielle dans cette loi m'a paru au premier abord surprenante. En effet, comment une invention mathématique, l'exponentielle peut modéliser un phénomène aussi naturel que le temps de désintégration d'un atome ?
+
+Je vais donc montrer dans un premier temps d'où vient la loi de décroissance radioactive puis comment les chercheurs l'utilisent dans le cadre de la datation au carbone 14 mais aussi dans de nombreux autres domaines.
+
+
+
+\section{Démonstration de la loi exponentielle}
+\subsection{Aspect probabiliste}
+On considère un atome radioactif, c'est à dire susceptible de se désintégrer à tout moment. On sait qu'il n'y a aucun moyen de savoir quand il va choisir de se désintégrer, donc tout ce qu'on peut dire est qu'il y aura une certaine probabilité pour qu'il se soit désintégré avant le temps $t$. Tout le problème est donc de déterminer cette probabilité de manière convaincante.
+
+
+On va partir d'un simple fait physique assez intuitif. Un atome est dit ``sans mémoire'', c'est à dire qu'il ne se dit jamais ``Cela fait longtemps que j'attends, il serait peut-être temps que je me désintègre''. En effet, ce type de remarque ne peut être le fait que d'un observateur extérieur, qui se dit effectivement que, s'il attend suffisamment longtemps, alors il a des chances de voir l'atome se désintégrer.
+
+Dans le langage des probabilités, cette absence de mémoire peut se traduire de la façon suivante : la probabilité que l'atome ne se désintègre pas durant les $s$ prochaines secondes est égale à celle qu'il ne se désintègre pas durant n'importe quel intervalle de $t$ secondes précédant, noté $t$, sachant tout de même qu'il est toujours intact au début de l'intervalle considéré.
+
+Autrement dit, seul compte le temps restant. En terme de probabilités conditionnelles, on peut noter
+
+$E_{[0;t]}$ l'évènement ``l'atome ne s'est pas désintégré avant l'instant $t$'' et
+
+$E_{[t;t+s]}$ l'évènement ``l'atome ne se désintègre pas durant les $s$ prochaines secondes.'',
+
+On peut  donc soumettre chaque atome à un “tirage” à 2 issues dont les “résultats” sont les suivants :
+
+“l’atome se désintègre durant l'intervalle considéré” ou
+“l’atome ne se désintègre pas”.
+On obtient ainsi une épreuve de Bernoulli.
+
+Cependant, La probabilité $P(E_{[t;t+s]})$ pour qu’un noyau se désintègre entre $t$ et $t + s$ nécessite donc :
+\begin{itemize}
+ \item que le noyau ne se soit pas désintégré entre $0$ et $t$, $1^{ere}$ épreuve de notre schéma de Bernoulli.
+
+ \item qu’il se désintègre ensuite entre $t$ et $t + s$, ou, ce qui revient au même, durant l'intervalle de $s$ secondes, ``épreuve'' B.
+\end{itemize}
+On peut modéliser la situation par un arbre de probabilité pondéré:
+%:-+-+-+- Engendré par : http://math.et.info.free.fr/TikZ/Arbre/
+\begin{center}
+% Racine à Gauche, développement vers la droite
+\begin{tikzpicture}[xscale=1,yscale=1]
+% Styles (MODIFIABLES)
+\tikzstyle{fleche}=[->,>=latex,thick]
+\tikzstyle{noeud}=[fill=yellow,circle,draw]
+\tikzstyle{feuille}=[fill=yellow,circle,draw]
+\tikzstyle{etiquette}=[midway,fill=white,draw]
+% Dimensions (MODIFIABLES)
+\def\DistanceInterNiveaux{3}
+\def\DistanceInterFeuilles{2}
+% Dimensions calculées (NON MODIFIABLES)
+\def\NiveauA{(0)*\DistanceInterNiveaux}
+\def\NiveauB{(1.5)*\DistanceInterNiveaux}
+\def\NiveauC{(2.5)*\DistanceInterNiveaux}
+\def\InterFeuilles{(-1)*\DistanceInterFeuilles}
+% Noeuds (MODIFIABLES : Styles et Coefficients d'InterFeuilles)
+\node[noeud] (R) at ({\NiveauA},{(1)*\InterFeuilles}) {$0$};
+\node[noeud] (Ra) at ({\NiveauB},{(0.5)*\InterFeuilles}) {$A$};
+\node[feuille] (Raa) at ({\NiveauC},{(0)*\InterFeuilles}) {$B$};
+\node[feuille] (Rab) at ({\NiveauC},{(1)*\InterFeuilles}) {$\overline{B}$};
+\node[feuille] (Rb) at ({\NiveauB},{(2)*\InterFeuilles}) {$\overline{A}$};
+% Arcs (MODIFIABLES : Styles)
+\draw[fleche] (R)--(Ra) node[etiquette] {$P(E_{[0;t]})$};
+\draw[fleche] (Ra)--(Raa) node[etiquette] {$P(E_{[0;s]})$};
+\draw[fleche] (Ra)--(Rab) node[etiquette] {$P(\overline{E_{[0;s]}})$};
+\draw[fleche] (R)--(Rb) node[etiquette] {$P(\overline{E_{[0;t]}})$};
+\end{tikzpicture}
+\end{center}
+%:-+-+-+-+- Fin
+
+% On a la relation suivante, pour tout $s$ et $t$ : $P(E_{s+t}/E_t) = P(E_S)$.
+
+On obtient, à l'aide de la formule des probabilités conditionnelles :
+\[
+P_t(E_{[0;s]}) = \frac{P(E_{[t+s]} \cap E_{[0;t]})}{P(E_{[0;t]})} = \frac{P(E_{[t+s]})}{P(E_{[0;t]})}
+\]
+On peut simplifier l'expression du numérateur en enlevant le $\cap E_t$ car on a supposé que l'atome est toujours intact au début des $s$ secondes étudiées.
+
+On obtient donc : $P(E_{[t+s]}) = P(E_{[0;t]})\times P(E_{[0;s]})$ Autrement dit, la probabilité que l'atome se désintègre pas dans un intervalle de temps $a+b$ vaut la probabilité qu'il ne se soit pas désintégré dans un intervalle de temps $a$ multipliée par la probabilité qu'il ne se soit pas désintégré dans un intervalle de temps $b$.
+
+\subsection{Une fonction vérifiant $f(a+b) = f(a)+f(b)$}
+Ce résultat est important, mais il faut encore le transformer pour obtenir la loi de décroissance radioactive.
+Notons alors $G(x)$ la valeur de $P(E_x)$, pour tout intervalle d'une durée $x$. On a ainsi, pour tout $s$ et $t$ : $G(s+t) = G(s)G(t)$. Cette égalité est la conséquence directe du résultat précédant.
+
+Posons alors $H(x) = \ln(G(x))$. L'expression précédente devient, gr\^ace aux propriétés du logarithme népérien : $H(s+t) = H(s)+H(t)$.
+
+Cette égalité est intéressante car elle nous permet de déduire que $H$ est une aussi une fonction linéaire d'après l'étude de l'équation fonctionnelle de Cauchy, c'est à dire que de la forme $H(x) = ax$, où $a$ est un nombre réel quelconque.
+On sait donc que $H(x)$ vaut le logarithme de $G(x)$ mais est aussi de la forme $ax$. On en déduit que $\ln(G(x))$ est de la forme $ax$.
+
+\subsection{Retour à notre situation}
+Rappel : On trouve ce résultat car la fonction exponentielle et le logarithme népérien sont réciproques.
+\begin{flalign*}
+H(x) &= \ln(G(x))\\
+ax &= \ln(G(x))\\
+G(x) &= e^{at}
+\end{flalign*}
+On obtient la probabilité que l'atome se désintègre pas au cours du temps.
+Cependant, pour que l'atome puisse se désintégrer à l'instant $t$, il est nécessaire qu'il soit toujours en vie à l'instant $t-1$.
+
+Ainsi, plus le temps passe, plus la probabilité que l'atome ne se désintègre pas à l'instant $t$ augmente.
+
+On en déduit que la probabilité de son existence diminue. Pour obtenir la probabilité que l'atome existe toujours à un instant $t$, il faut donc faire l'inverse de la fonction trouvée précédemment, soit :
+%On peut appliquer ce résultat à une masse $m$ d'une espèce radioactive.
+%On obtient : $m_0\times e^{at}$. Cependant, on a vu q'un atome a autant de chance de se désintégrer dans n'importe quel intervalle de $t$ secondes. Cela signifie donc que le nombre de particules diminue selon $m_0 \times \frac{1}{e^{at}}= m_0 \times e^{-at}$.
+
+\begin{flalign*}
+G(x) &= \frac{1}{e^{at}}\\
+G(x) &= \frac{e^0}{e^{at}}\\
+G(x) &= e^{-at}
+\end{flalign*}
+On en déduit alors que la probabilité que l'atome ne se soit pas désintégré au bout du temps $t$ est donné par l'expression $G(t) = e^{-at}$. C'est la loi exponentielle, dont $a$ est le seul paramètre, donc le seul degrés de liberté de l'atome.
+\section{Application à une population d'atomes}
+On supposera que la masse d'un élément radioactif contenu est dans une source scellée et a une masse initiale $m_0$. Cela signifie que les changements de masse observés ne peuvent \^etre d\^u qu'à la désintégration radioactive puisqu'aucune réaction chimiques avec l'extérieur n'est dès lors, possible.  Sa masse va diminuer en suivant la loi exponentielle, c'est-à-dire : $m(t) = m_0 e^{-at}$. En physique, $a$ est noté $\lambda$ et se nomme la constante radioactive.
+\subsection{Introduction}
+C'est en particulier sa valeur qui fixe la demi-vie de l'atome, c'est à dire le temps qu'il faut attendre pour que la moitié des atomes radioactifs aient été désintégrés. La demi-vie dépend du type d'atome auquel on a affaire : par exemple, elle est de $5720$ ans pour le carbone 14. Si l'on note T la demi-vie d'un atome (grandeur mesurable expérimentalement), alors les grandeurs $a$ et $T$ sont liées par la relation :
+\[e^{-aT} = 1/2 \iff a = \frac{\ln(2)}{T}\].
+
+Le $1/2$ provient du fait que durant $T$, la moitié des atomes se sont désintégrés, donc on a une probabilité de $\frac{1}{2}$ qu'un atome se désintègre durant l'intervalle de temps $T$.
+
+\subsection{Étude de la fonction à travers un exemple}
+Imaginons qu'un conteneur renferme une source radioactive constituée par une masse $m_0 = 50$ mg de plutonium provenant d'un réacteur nucléaire. La période radioactive du plutonium est $T = 24000$ ans.
+
+On cherche d'abord l'expression de la masse $m$ en fonction du temps.
+
+On a $\displaystyle \lambda = \frac{\ln{n}}{T} = \frac{\ln{2}}{24}$ et $m_0e^{-\lambda t} = 50e^{-\frac{\ln{2}}{24}t}$.
+
+On cherche comment va évoluer la masse de plutonium. On cherche donc la limite.
+
+$\displaystyle -\frac{\ln{2}}{24} < 0$, donc $\displaystyle \Lim{t\to+\infty} -\frac{\ln{2}}{24}t = - \infty$.
+
+Par composition des limites, $\displaystyle \Lim{t\to+\infty} m(t) = 0$.
+
+On veut ensuite montrer que la fonction est décroissante. On utilise une fonction composée pour calculer la dérivée. En effet, le signe de la dérivée d'une fonction nous permet d'obtenir le sens de variation de la fonction. Ainsi, $\displaystyle m(t) = 50e^{-\frac{\ln{2}}{24}t} = 50e^{u}$.
+
+On a : $u'(t) = -\ln{2}{24}$. Nous avons donc : $m'(t) = 50u'(t)e^{u(t)}$, soit \[m'(t) = -\frac{20\ln{2}}{24}e^{-\frac{\ln{2}}{24}t} < 0\]
+
+La fonction est donc décroissante, mais ce ne nous indique pas dans combien de temps il ne restera plus qu'un \%. On cherche donc à résoudre $m(t)\leq \frac{1}{100} \times m_0$.
+\begin{flalign*}
+m(t)\leq \frac{1}{100} \times m_0 &= \frac{50}{100} = 0.5.\\
+&\iff 50e^{-\frac{\ln{2}}{24}t} \leq 0.5\\
+& \iff e^{-\frac{\ln{2}}{24}t} \leq \frac{0.5}{50} = 0.01\\
+&\iff \ln{e^{-\frac{\ln{2}}{24}t}} \leq \ln{0.01}\\
+&\iff -\frac{\ln{2}}{24}t \leq \ln{0.01}\\
+&\iff t\geq \frac{\ln{100}}{\ln{2}}\times 24\\
+&\iff t \simeq 260
+\end{flalign*}
+
+On obtient donc 160 000 an avant qu'il ne reste plus que 1\% de masse d'éléments radioactifs.
+\subsection{Application historique}
+D'après les travaux de Libby en $1949$, la demie-vie de l'isotope carbone 14 est $T=5730$ ans. La loi de décroissance radioactive du carbone 14 peut s'exprimer en fonction de son activité par $A(t) = A_0e^{-\lambda t}$ avec $A_0$,  l'activité initiale du carbone 14 qui vaut $13.5$ Bq, et A l'activité du carbone 14 mesuré à l'instant t.
+
+Le prélèvement d'une poutre en bois dans la tombe d'un vizir, à Sakara, vaste nécropole égyptienne de la région de Memphis, fournit au moment de la mesure une activité A = 7,70. On essaie de déterminer l'\^age de la tombe de ce visir.
+
+On a : $\lambda = \frac{\ln(2)}{T}$ et on peut écrire :
+\begin{flalign*}
+A = A_0e^{-\lambda t} &\iff e^{-\lambda t} = \frac{A}{A_0}\\
+&\iff \ln(e^{-\lambda t}) = \ln(\frac{A}{A_0})\\
+&\iff -\lambda t = - \ln(\frac{A_0}{A})\\
+&\iff t = \frac{1}{\lambda}\ln(\frac{A_0}{A})\\
+&\iff t = \frac{T}{\ln(2)}\ln(\frac{A_0}{A})
+\end{flalign*}
+L'\^age de la tombe du Visir est donc de $\displaystyle \frac{5730}{\ln(2)}\ln(\frac{13.5}{6.68}) \simeq 4633$ ans environs.
+
+Cela est cohérent puisque les archéologues s'accordent à dire que La première pyramide de cette zone est édifiée vers 2600 av. J.-C.
+\section{Conclusion}
+Ainsi, comme nous l'avons montré, la loi de décroissance radioactive provient directement des caractéristiques physique du phénomène qu'elle mesure, l'absence de mémoire des atomes. Si cette loi est employée dans de nombreux domaines, elle ne peut \^etre utilisée seule pour déterminer avec précision une date. En effet, pour suivre la loi, les éléments radioactifs ne doivent pas pouvoir réagir avec l'extérieur. Or ce n'est que très rarement le cas. Il s'agit donc d'un indicateur qui nous permet d'obtenir un ordre de grandeur de l'\^age de l'objet étudié.
+\subsection{Sources}
+\begin{itemize}
+ \item Tangente Hors-Série n° 17 sur Les probabilités
+ \item Émission de radio ``La science CQFD'' sur France Culture de mai 2024.
+ \item https://www.cea.fr/comprendre/Pages/radioactivite/essentiel-sur-la-datation-au-carbone-14.aspx
+\end{itemize}
+\section{Questions}
+\subsection{Quelles sont les hypothèses préalables pour utiliser la décroissance radioactive}
+Pour que la datation au carbone 14 donne des résultats, deux conditions sont nécessaires : l'échantillon analysé doit avoir moins de 50 000 ans, car toute radioactivité disparaît au-delà : impossible, donc, de l'utiliser sur des fossiles de dinosaures.
+\subsection{Quelle est l'incertitude associée à une datation}
+On estime l'incertitude à 250 ans à peu près.
+\subsection{En quelle année la datation au carbone 14 a-t-elle été découverte ?}
+C'est en 1949 que la première datation au carbone 14 a été utilisée par Franck Libby. Il s'agissait d'une datation sur deux échantillons de bois venus de tombes égyptiennes dont l'âge, bien établi par les archéologues, est d'environ 4 600 ans3.
+\end{document}
